@@ -45,8 +45,16 @@ params = dim(W)+dim(V)+dim(U) = n*n + kn + nm
 
 # 실행, 평가 예측
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x, y, epochs=150, batch_size=1)
 
+from keras.callbacks import EarlyStopping, TensorBoard
+tb_hist = TensorBoard(log_dir = "./graph",
+                      histogram_freq=0,
+                      write_graph=True,
+                      write_images=True)
+
+early_stopping = EarlyStopping(monitor="loss", patience=10, mode='auto')
+model.fit(x, y, epochs=100, batch_size=1, verbose=1,
+          callbacks=[early_stopping, tb_hist])
 loss, mae = model.evaluate(x,y,batch_size=1)
 print(loss, mae)
 

@@ -79,7 +79,17 @@ model.summary()
 #3. 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mse'])    # mse, mae
 # mse = 평균 제곱 에러, mae = 평균 절대값 에러, 분류 모델에서만 acc를 사용해야 함
-model.fit([x1_train, x2_train], [y1_train, y2_train, y3_train], epochs=100, batch_size=1, validation_data=([x1_val, x2_val], [y1_val, y2_val, y3_val]))
+
+from keras.callbacks import EarlyStopping # Epoch 을 많이 돌린 후, 특정 시점에서 멈추는 것, 과적합 방지
+from keras.callbacks import TensorBoard
+
+tb_hist = TensorBoard(log_dir= './graph', 
+                      histogram_freq=0, # 통상적으로 써줌
+                      write_graph=True, 
+                      write_images=True)  # cmd에 log_dir폴더 전까지만가서 'tensorboard --logdir=./폴더명' 실행, 후에 크롬에 'localhost:6006' 실행
+
+early_stopping = EarlyStopping(monitor='loss', patience= 20, mode = 'auto')
+model.fit([x1_train, x2_train], [y1_train, y2_train, y3_train], epochs=100, batch_size=1, validation_data=([x1_val, x2_val], [y1_val, y2_val, y3_val]), callbacks=[early_stopping, tb_hist])
 
 #4. 평가예측
 mse = model.evaluate([x1_test, x2_test], [y1_test, y2_test, y3_test], batch_size=1)
