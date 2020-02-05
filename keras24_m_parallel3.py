@@ -58,7 +58,7 @@ LSTM이면 그대로 사용 가능하다
 
 # LSTM
 model = Sequential()
-model.add(LSTM(32, activation='relu', input_shape=(9,1), return_sequences=True)) 
+model.add(LSTM(32, activation='relu', input_shape=(3,3))) 
 model.add(Dense(16))
 model.add(Dense(8))
 model.add(Dense(3))
